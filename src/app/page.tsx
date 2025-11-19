@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <>
       <Button variant="outline">Button</Button>
-      <Button variant="outline" size="icon" aria-label="Submit">
+      <Button variant="outline" size="icon" aria-label="Submit"> 
         <ArrowUpIcon />
       </Button>
     </>
