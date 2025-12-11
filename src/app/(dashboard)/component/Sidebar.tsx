@@ -13,142 +13,190 @@ import {
   ChevronUp,
   MoreVertical,
 } from "lucide-react";
+
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { logout } from "@/lib/auth";
 
+type MenuItem =
+  | {
+      type: "item";
+      label: string;
+      icon: React.ComponentType<{ size?: number }>;
+      href: string;
+      match: string;
+    }
+  | {
+      type: "dropdown";
+      label: string;
+      icon: React.ComponentType<{ size?: number }>;
+      match: string;
+      items: { label: string; href: string; match: string }[];
+    };
+
+const MENU_CONFIG: MenuItem[] = [
+  {
+    type: "item",
+    label: "Dashboard",
+    icon: LayoutDashboard,
+    href: "/",
+    match: "/",
+  },
+  {
+    type: "dropdown",
+    label: "Transactions",
+    icon: ArrowLeftRight,
+    match: "/transactions",
+    items: [
+      { label: "MDB", href: "/transactions/mdb", match: "mdb" },
+      { label: "Virtual", href: "/transactions/virtual", match: "virtual" },
+      { label: "BAV", href: "/transactions/bav", match: "bav" },
+      { label: "Horizon Academy", href: "/transactions/horizonacademy", match: "horizonacademy" },
+    ],
+  },
+  {
+    type: "item",
+    label: "Employee Loans",
+    icon: Users,
+    href: "/employees",
+    match: "/employees",
+  },
+  {
+    type: "dropdown",
+    label: "Borrow & Lend",
+    icon: Users,
+    match: "/borrow-lend",
+    items: [
+      { label: "MDB", href: "/borrow-lend/mdb", match: "mdb" },
+      { label: "Academy", href: "/borrow-lend/academy", match: "academy" },
+      { label: "BAV", href: "/borrow-lend/bav", match: "bav" },
+      { label: "Virtual", href: "/borrow-lend/virtual", match: "virtual" },
+    ],
+  },
+  {
+    type: "item",
+    label: "Accounts",
+    icon: CircleUser,
+    href: "/accounts",
+    match: "/accounts",
+  },
+  {
+    type: "item",
+    label: "Withdrawals",
+    icon: BanknoteArrowDown,
+    href: "/withdrawals",
+    match: "/withdrawals",
+  },
+  {
+    type: "item",
+    label: "Categories",
+    icon: ChartColumnStacked,
+    href: "/categories",
+    match: "/categories",
+  },
+  {
+    type: "item",
+    label: "Settings",
+    icon: Settings,
+    href: "/settings",
+    match: "/settings",
+  },
+];
+
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
 
-  // Correct active detection
-  const isTransactionsActive = pathname.startsWith("/transactions");
-  const isBorrowActive = pathname.startsWith("/borrow-lend"); // <-- Ye badla hai!
+  // Track dropdown states dynamically
+  const [openDropdown, setOpenDropdown] = useState<{ [key: string]: boolean }>(
+    () =>
+      MENU_CONFIG.filter((m) => m.type === "dropdown").reduce((acc: any, m: any) => {
+        acc[m.match] = pathname.startsWith(m.match);
+        return acc;
+      }, {})
+  );
 
-  const [openTransactions, setOpenTransactions] = useState(isTransactionsActive);
-  const [openBorrow, setOpenBorrow] = useState(isBorrowActive);
-
-  // Auto open dropdown jab page load ho
-  // useEffect(() => {
-  //   setOpenTransactions(isTransactionsActive);
-  //   setOpenBorrow(isBorrowActive);
-  // }, [pathname]);
+  const toggleDropdown = (key: string) => {
+    setOpenDropdown((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
 
   const handleLogout = () => {
     logout();
     router.push("/sign-in");
   };
 
-  // Reusable menu item style
-  const menuItemClass = (path: string) =>
-    `flex items-center gap-3 px-3.5 py-3 rounded-[4px] transition 
-  ${pathname === path ? "bg-[#299D91] text-white" : "text-[#BABABA] hover:text-white"}`;
-
-  const submenuItemClass = (segment: string) =>
-    `block px-3 py-2 rounded transition text-sm
-     ${pathname.includes(segment) ? "bg-[#299D91] text-white" : "text-[#BABABA] hover:text-white"}`;
-
   return (
     <div className="bg-[#111827] text-white h-screen w-64 pl-4 pt-10 pr-4 pb-10 relative flex flex-col">
+      
       {/* Logo */}
-      <Image src="/images/LogoLight.png" alt="Logo" width={158} height={40} className="mb-10" />
-
-      {/* Menu */}
+      <Image src="/images/LogoLight.png" width={158} height={40} alt="Logo" className="mb-10" />
+      {/* MENU LIST */}
       <ul className="space-y-3 flex-1">
-        {/* Dashboard */}
-        <li>
-          <Link href="/" className={menuItemClass("/")}>
-            <LayoutDashboard size={20} />
-            Dashboard
-          </Link>
-        </li>
+        {MENU_CONFIG.map((menu) => {
+          if (menu.type === "item") {
+            const active = pathname === menu.href;
 
-        {/* Transactions Dropdown */}
-        <li>
-          <button
-            onClick={() => setOpenTransactions(!openTransactions)}
-            className={`flex items-center justify-between w-full px-3.5 py-3 rounded-lg transition
-              ${isTransactionsActive ? "text-[#299D91] bg-[#1a3a3a]" : "text-[#BABABA] hover:text-white"}`}
-          >
-            <span className="flex items-center gap-3">
-              <ArrowLeftRight size={20} />
-              Transactions
-            </span>
-            {openTransactions ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
-          </button>
+            return (
+              <li key={menu.label}>
+                <Link
+                  href={menu.href}
+                  className={`flex items-center gap-3 px-3.5 py-3 rounded-lg transition 
+                    ${active ? "bg-[#299D91] text-white" : "text-[#BABABA] hover:text-white"}`}
+                >
+                  <menu.icon size={20} />
+                  {menu.label}
+                </Link>
+              </li>
+            );
+          }
 
-          {openTransactions && (
-            <ul className="ml-10 mt-2 space-y-2 text-sm">
-              {[
-                { key: "mdb", label: "MDB" },
-                { key: "virtual", label: "Virtual" },
-                { key: "bav", label: "BAV" },
-                { key: "horizonacademy", label: "Horizon Academy" },
-              ].map((item) => (
-                <li key={item.key}>
-                  <Link
-                    href={`/transactions/${item.key}`}
-                    className={submenuItemClass(item.key)}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-        </li>
+          // DROPDOWN MENU ITEM
+          if (menu.type === "dropdown") {
+            const active = pathname.startsWith(menu.match);
+            const isOpen = openDropdown[menu.match];
 
-        {/* Employee Loans */}
-        <li>
-          <Link href="/employees" className={menuItemClass("/employees")}>
-            <Users size={20} /> Employee Loans
-          </Link>
-        </li>
+            return (
+              <li key={menu.label}>
+                <button
+                  onClick={() => toggleDropdown(menu.match)}
+                  className={`flex items-center justify-between w-full px-3.5 py-3 rounded-lg transition
+                      ${active ? "text-[#299D91] bg-[#1a3a3a]" : "text-[#BABABA] hover:text-white"}`}
+                >
+                  <span className="flex items-center gap-3">
+                    <menu.icon size={20} />
+                    {menu.label}
+                  </span>
+                  {isOpen ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
+                </button>
 
-        {/* Borrow & Lend Dropdown - FIXED! */}
-        <li>
-          <button
-            onClick={() => setOpenBorrow(!openBorrow)}
-            className={`flex items-center justify-between w-full px-3.5 py-3 rounded-lg transition
-              ${isBorrowActive ? "text-[#299D91] bg-[#1a3a3a]" : "text-[#BABABA] hover:text-white"}`}
-          >
-            <span className="flex items-center gap-3">
-              <Users size={20} /> Borrow & Lend
-            </span>
-            {openBorrow ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
-          </button>
-
-          {openBorrow && (
-            <ul className="ml-10 mt-2 space-y-2 text-sm">
-              {[
-                { path: "/borrow-lend/mdb", label: "MDB" },
-                { path: "/borrow-lend/academy", label: "Academy" },
-                { path: "/borrow-lend/bav", label: "BAV" },
-                { path: "/borrow-lend/virtual", label: "Virtual" },
-              ].map((item) => (
-                <li key={item.path}>
-                  <Link
-                    href={item.path}
-                    className={submenuItemClass(item.path.split("/").pop()!)}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-        </li>
-
-        {/* Remaining Menu Items */}
-        <li><Link href="/accounts" className={menuItemClass("/accounts")}><CircleUser size={20} /> Accounts</Link></li>
-        <li><Link href="/withdrawals" className={menuItemClass("/withdrawals")}><BanknoteArrowDown size={20} /> Withdrawals</Link></li>
-        <li><Link href="/categories" className={menuItemClass("/categories")}><ChartColumnStacked size={20} /> Categories</Link></li>
-        <li><Link href="/settings" className={menuItemClass("/settings")}><Settings size={20} /> Settings</Link></li>
+                {isOpen && (
+                  <ul className="ml-10 mt-2 space-y-2 text-sm">
+                    {menu.items?.map((item: any) => (
+                      <li key={item.href}>
+                        <Link
+                          href={item.href}
+                          className={`block px-3 py-2 rounded transition text-sm
+                            ${
+                              pathname.includes(item.match)
+                                ? "bg-[#299D91] text-white"
+                                : "text-[#BABABA] hover:text-white"
+                            }`}
+                        >
+                          {item.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            );
+          }
+        })}
       </ul>
 
-      {/* Logout */}
+      {/* LOGOUT */}
       <div
         onClick={handleLogout}
         className="absolute bottom-24 left-4 right-4 flex items-center gap-3 cursor-pointer bg-[#262626] px-3.5 py-3 rounded-lg text-[#BABABA] hover:text-white transition"
@@ -156,20 +204,10 @@ export default function Sidebar() {
         <LogOut size={20} />
         <span>Logout</span>
       </div>
-
-      {/* Divider */}
       <div className="w-full h-px bg-gray-600 my-4"></div>
-
-      {/* User Profile */}
       <div className="flex items-center justify-between px-2">
         <div className="flex items-center gap-3">
-          <Image
-            src="/images/sidebar.svg"
-            alt="User"
-            width={40}
-            height={40}
-            className="rounded-full border border-gray-500"
-          />
+          <Image src="/images/sidebar.svg" width={40} height={40} alt="User" className="rounded-full border border-gray-500" />
           <div>
             <p className="font-medium">Tony Stark</p>
             <p className="text-sm text-gray-400">Admin</p>
