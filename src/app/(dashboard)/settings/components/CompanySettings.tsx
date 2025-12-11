@@ -121,7 +121,7 @@ export default function CompanySettings() {
       {/* Modal / Popup */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-[#00000021] bg-opacity-50 flex items-center justify-center z-50" onClick={() => setIsModalOpen(false)}>
-          <div className="bg-white rounded-[8] shadow-[-2px_-2px_150px_0_rgba(0,0,0,0.25)] w-full max-w-[492px] p-5 relative" >
+          <div className="bg-white rounded-[8] shadow-[-2px_-2px_150px_0_rgba(0,0,0,0.25)] w-full max-w-[492px] p-5 relative" onClick={(e) => e.stopPropagation()}>
             {/* Close Button */}
             <button
               onClick={() => setIsModalOpen(false)}
