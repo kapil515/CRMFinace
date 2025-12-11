@@ -12,6 +12,7 @@ export default function CompanySettings() {
   ]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
   const [newCompany, setNewCompany] = useState({
     name: "",
     type: "",
