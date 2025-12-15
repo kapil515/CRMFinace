@@ -1,9 +1,6 @@
 import React from "react";
+import { redirect } from "next/navigation";
 
-export default function (){
-    return (
-        <>
-        <h1>Borrow & lend</h1>
-        </>
-    )
+export default function NotFound() {
+  redirect("/borrow-lend/mdb"); 
 }

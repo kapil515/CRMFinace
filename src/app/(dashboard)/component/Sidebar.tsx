@@ -54,6 +54,8 @@ const MENU_CONFIG: MenuItem[] = [
       { label: "Virtual", href: "/transactions/virtual", match: "virtual" },
       { label: "BAV", href: "/transactions/bav", match: "bav" },
       { label: "Horizon Academy", href: "/transactions/horizonacademy", match: "horizonacademy" },
+      { label: "Delhi Branch", href: "/transactions/delhi", match: "delhi" },
+      { label: "Mumbai Branch", href: "/transactions/mumbai", match: "mumbai" },
     ],
   },
   {
@@ -63,18 +65,21 @@ const MENU_CONFIG: MenuItem[] = [
     href: "/employees",
     match: "/employees",
   },
-  {
+    {
     type: "dropdown",
     label: "Borrow & Lend",
-    icon: Users,
+    icon: ArrowLeftRight,
     match: "/borrow-lend",
     items: [
       { label: "MDB", href: "/borrow-lend/mdb", match: "mdb" },
-      { label: "Academy", href: "/borrow-lend/academy", match: "academy" },
-      { label: "BAV", href: "/borrow-lend/bav", match: "bav" },
       { label: "Virtual", href: "/borrow-lend/virtual", match: "virtual" },
+      { label: "BAV", href: "/borrow-lend/bav", match: "bav" },
+      { label: "Horizon Academy", href: "/borrow-lend/horizonacademy", match: "horizonacademy" },
+      { label: "Delhi Branch", href: "/borrow-lend/delhi", match: "delhi" },
+      { label: "Mumbai Branch", href: "/borrow-lend/mumbai", match: "mumbai" },
     ],
   },
+
   {
     type: "item",
     label: "Accounts",
@@ -132,6 +137,7 @@ export default function Sidebar() {
       
       {/* Logo */}
       <Image src="/images/LogoLight.png" width={158} height={40} alt="Logo" className="mb-10" />
+      
       {/* MENU LIST */}
       <ul className="space-y-3 flex-1">
         {MENU_CONFIG.map((menu) => {
@@ -173,7 +179,7 @@ export default function Sidebar() {
 
                 {isOpen && (
                   <ul className="ml-10 mt-2 space-y-2 text-sm">
-                    {menu.items?.map((item: any) => (
+                    {menu.items.map((item) => (
                       <li key={item.href}>
                         <Link
                           href={item.href}

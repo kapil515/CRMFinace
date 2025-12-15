@@ -1,6 +1,6 @@
 import React from "react";
 import { Card } from "../component/Card";
-import TransactionsTable from "../transactions/mdb/components/TransactionsTable";
+import TransactionsTable from "../transactions/[company]/components/TransactionsTable";
 
 export default function () {
     const data = [
@@ -20,8 +20,8 @@ export default function () {
             amount: "$240,399",
             percent: "+15.2%",
         },
-        
-        
+
+
     ]
     return (
         <>

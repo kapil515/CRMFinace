@@ -39,13 +39,7 @@ export default function Totalincome() {
           ))
         }
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-5">
-        {
-          data.map((item, index) => (
-            <Card key={index} title={item.title} amount={item.amount} percent={item.percent} />
-          ))
-        }
-      </div>
+     
     </>
   );
 }
