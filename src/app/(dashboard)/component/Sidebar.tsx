@@ -56,6 +56,7 @@ const MENU_CONFIG: MenuItem[] = [
       { label: "Horizon Academy", href: "/transactions/horizonacademy", match: "horizonacademy" },
       { label: "Delhi Branch", href: "/transactions/delhi", match: "delhi" },
       { label: "Mumbai Branch", href: "/transactions/mumbai", match: "mumbai" },
+      { label: "abohar Branch", href: "/transactions/abohar", match: "abohar" },
     ],
   },
   {

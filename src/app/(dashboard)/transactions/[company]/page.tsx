@@ -1,33 +1,20 @@
 "use client";
 
-import { useParams } from "next/navigation";
-import Totalincome from "../../component/Totalincome";
-import Totalborrow from "../../component/Totalborrow";
+import IncomeCards from "@/app/(dashboard)/component/Totalincome";
+import BorrowCards from "@/app/(dashboard)/component/Totalborrow";
 import TransactionsTable from "./components/TransactionsTable";
+import { useParams } from "next/navigation";
 
-const companyNames: Record<string, string> = {
-  mdb: "MDB",
-  virtual: "Virtual",
-  bav: "BAV",
-  horizonacademy: "Horizon Academy",
-  delhi: "Delhi Branch",
-  mumbai: "Mumbai Branch",
-};
-
-export default function CompanyTransactionsPage() {
+export default function CompanyPage() {
   const { company } = useParams();
-  const companyKey = company as string;
-  const companyName = companyNames[companyKey] || companyKey.toUpperCase();
+  const companyName = company?.toString().toUpperCase() || "Transactions";
 
   return (
-    <div className="p-6 space-y-8">
-      
-
-      <div className="">
-        <Totalincome />
-        <Totalborrow />
-        <TransactionsTable title="MDB Recent Transactions" />
-      </div>
+    <div className="p-6">
+      {/* <h1 className="text-2xl font-bold mb-8">{companyName} Transactions</h1> */}
+      <IncomeCards />
+      <BorrowCards />
+      <TransactionsTable title={`${companyName} Recent Transactions`} />
     </div>
   );
 }

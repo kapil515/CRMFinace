@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import Totalincome from "../../component/Totalincome";
 import Totalborrow from "../../component/Totalborrow";
-// import TransactionsTable from "./components/TransactionsTable";
+import TransactionsTable from "@/app/(dashboard)/transactions/[company]/components/TransactionsTable";
 
 const companyNames: Record<string, string> = {
   mdb: "MDB",
@@ -26,7 +26,7 @@ export default function CompanyTransactionsPage() {
       <div className="">
         <Totalincome />
         <Totalborrow />
-        {/* <TransactionsTable title="MDB Recent Transactions" /> */}
+        <TransactionsTable title="MDB Recent Transactions" />
       </div>
     </div>
   );

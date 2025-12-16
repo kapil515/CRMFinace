@@ -1,18 +1,13 @@
-// src/app/(dashboard)/transactions/mdb/components/TransactionsTable.tsx
-
 "use client";
 
 import { ChevronLeft, ChevronRight, Filter, ArrowUpDown, Plus, MoreVertical } from "lucide-react";
+import { COMPANY_DATA } from "@/app/(dashboard)/component/TransactionsData";
+import { useParams } from "next/navigation";
 
-export default function TransactionsTable({title} :{title:string}) {
-  const transactions = [
-    { date: "Jul 05, 2025", branch: "Abohar", type: "Expense", category: "Payroll", vendor: "John Smith", remarks: "June Payroll", amount: "₹10,000", receivedIn: "MDB Account", updatedBy: "John Doe" },
-    { date: "Jul 05, 2025", branch: "Abohar", type: "Expense", category: "Payroll", vendor: "John Smith", remarks: "June Payroll", amount: "₹10,000", receivedIn: "MDB Account", updatedBy: "John Doe" },
-    { date: "Jul 05, 2025", branch: "Abohar", type: "Expense", category: "Payroll", vendor: "John Smith", remarks: "June Payroll", amount: "₹10,000", receivedIn: "MDB Account", updatedBy: "John Doe" },
-    { date: "Jul 05, 2025", branch: "Mohali", type: "Expense", category: "Payroll", vendor: "John Smith", remarks: "June Payroll", amount: "₹10,000", receivedIn: "MDB Account", updatedBy: "John Doe" },
-    { date: "Jul 05, 05, 2025", branch: "Mohali", type: "Expense", category: "Payroll", vendor: "John Smith", remarks: "June Payroll", amount: "₹10,000", receivedIn: "MDB Account", updatedBy: "John Doe" },
-  ];
-
+export default function TransactionsTable({ title }: { title: string }) {
+  const { company } = useParams();
+  const companyKey = company as string;
+  const transactions = COMPANY_DATA[companyKey]?.transactions || COMPANY_DATA["mdb"].transactions;
   return (
     <div>
       <div className="flex items-center justify-between py-5">
@@ -45,12 +40,12 @@ export default function TransactionsTable({title} :{title:string}) {
           </button>
         </div>
       </div>
+
       {/* Table */}
-      <div className="px-5 bg-white rounded-xl">
-        <table className="w-full ">
+      <div className="px-5 bg-white rounded-xl ">
+        <table className="w-full overflow-x-auto">
           <thead>
             <tr className=" divide-y divide-gray-100">
-
               <th className="px-2.5 py-4 text-left">
                 <input type="checkbox" className="w-4 h-4 text-[#0D9488] rounded bg-[#666666]" />
               </th>
@@ -71,7 +66,7 @@ export default function TransactionsTable({title} :{title:string}) {
           <tbody className="bg-white divide-y divide-gray-100">
             {transactions.map((tx, index) => (
               <tr key={index} className="hover:bg-gray-50 transition">
-                <td className="px-2.5 py-4">
+                   <td className="px-2.5 py-4">
                   <input type="checkbox" className="w-4 h-4 text-[#0D9488] rounded border-gray-300" />
                 </td>
                 <td className="px-2 py-4 text-sm text-[#666666] font-medium font-inter text-center">{tx.date}</td>
@@ -100,3 +95,6 @@ export default function TransactionsTable({title} :{title:string}) {
     </div>
   );
 }
+
+
+
